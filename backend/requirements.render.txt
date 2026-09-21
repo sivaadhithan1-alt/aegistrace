@@ -1,0 +1,13 @@
+# AegisTrace Render runtime dependencies
+fastapi>=0.115.0
+uvicorn[standard]>=0.30.0
+pydantic>=2.8.0
+cryptography>=43.0.0
+liboqs-python>=0.10.0
+pypdf>=4.3.0
+python-docx>=1.1.0
+openpyxl>=3.1.5
+python-pptx>=1.0.0
+Pillow>=10.4.0
+reportlab>=4.2.0
+python-multipart>=0.0.9

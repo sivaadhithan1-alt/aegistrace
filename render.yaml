@@ -1,0 +1,30 @@
+services:
+  - type: web
+    name: aegistrace-pqc-backend
+    runtime: docker
+    plan: free
+    region: singapore
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: AEGISTRACE_DATA_DIR
+        value: /tmp/aegistrace-data
+      - key: AEGISTRACE_AIR_GAP_MODE
+        value: "false"
+      - key: AEGISTRACE_EXTERNAL_NETWORK_ALLOWED
+        value: "true"
+      - key: AEGISTRACE_TELEMETRY_ENABLED
+        value: "false"
+      - key: CORS_ORIGINS
+        value: https://aegistrace-pqc-frontend.onrender.com,http://localhost:5173
+
+  - type: static_site
+    name: aegistrace-pqc-frontend
+    buildCommand: cd frontend && npm ci && npm run build
+    staticPublishPath: ./frontend/dist
+    autoDeploy: true
+    envVars:
+      - key: VITE_API_URL
+        value: https://aegistrace-pqc-backend.onrender.com

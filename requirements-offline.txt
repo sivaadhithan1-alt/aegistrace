@@ -1,0 +1,31 @@
+# AegisTrace PQC — Offline Air-Gapped Dependencies & Environment Specification
+
+# System Prerequisites:
+# - Operating System: Linux (Ubuntu 22.04 LTS / Debian 12 / RHEL 9 recommended)
+# - Python Version: 3.11+ (Tested and verified on Python 3.13)
+# - Node.js Version: v20+ / npm v10+
+# - C Library: Open Quantum Safe liboqs (v0.10.0+ / v0.12.0+) with ML-KEM and ML-DSA enabled
+
+# Python Backend Dependencies
+fastapi>=0.115.0
+uvicorn[standard]>=0.30.0
+pydantic>=2.8.0
+cryptography>=43.0.0
+liboqs-python>=0.10.0
+pypdf>=4.3.0
+python-docx>=1.1.0
+openpyxl>=3.1.5
+python-pptx>=1.0.0
+Pillow>=10.4.0
+reportlab>=4.2.0
+python-multipart>=0.0.9
+pytest>=8.3.0
+httpx>=0.27.0
+
+# Node.js Frontend Dependencies (in frontend/package.json)
+# react: ^18.3.1
+# react-dom: ^18.3.1
+# lucide-react: ^0.468.0
+# tailwindcss: ^4.0.0
+# vite: ^6.0.0 / ^8.3.0
+# typescript: ^5.6.0
