@@ -20,6 +20,8 @@ ARG LIBOQS_VERSION=0.12.0
 RUN git clone --depth 1 --branch ${LIBOQS_VERSION} https://github.com/open-quantum-safe/liboqs.git /tmp/liboqs \
     && cmake -S /tmp/liboqs -B /tmp/liboqs/build -G Ninja \
        -DOQS_BUILD_ONLY_LIB=ON \
+       -DOQS_DIST_BUILD=OFF \
+       -DOQS_MINIMAL_BUILD="KEM_ml_kem_768;SIG_ml_dsa_65" \
        -DBUILD_SHARED_LIBS=ON \
     && cmake --build /tmp/liboqs/build \
     && cmake --install /tmp/liboqs/build \
