@@ -27,7 +27,7 @@ export interface DemoStepMetadata {
 export const DEMO_STEPS: DemoStepMetadata[] = [
   {
     step: 1,
-    target_page: 'demo',
+    target_page: 'dashboard',
     title: '1. The Classified Data Leak Problem',
     summary: 'Traditional end-to-end encrypted sharing protects data in transit, but once decrypted, confidentiality terminates. Leaked copies cannot be proven without cryptographic provenance.',
     why_this_matters: 'In defense and classified operations, establishing non-repudiable accountability after decryption is just as vital as pre-decryption confidentiality.',
@@ -39,7 +39,7 @@ export const DEMO_STEPS: DemoStepMetadata[] = [
   },
   {
     step: 2,
-    target_page: 'demo',
+    target_page: 'security',
     title: '2. AegisTrace Post-Quantum Architecture',
     summary: 'AegisTrace unifies Post-Quantum Cryptography (FIPS 203/204), covert dynamic steganography, and permissioned DLT into a unified zero-knowledge provenance engine.',
     why_this_matters: 'Provides quantum-resistant confidentiality alongside tamper-proof forensic accountability in 100% air-gapped environments.',
@@ -166,7 +166,7 @@ export const DEMO_STEPS: DemoStepMetadata[] = [
   },
   {
     step: 12,
-    target_page: 'demo',
+    target_page: 'dashboard',
     title: '12. Executive Summary & Production Deliverables',
     summary: 'End-to-end verification completed: Confidential Document Sharing + Post-Quantum Cryptographic Accountability in 100% air-gapped defense networks.',
     why_this_matters: 'Ready for operational deployment in defense headquarters, classified research labs, and secure government enclaves.',
@@ -223,6 +223,7 @@ export const FloatingDemoCard: React.FC<FloatingDemoCardProps> = ({
       const nextStepNum = stepIndex + 2;
       setActiveStep(nextStepNum);
       const nextMeta = DEMO_STEPS[nextStepNum - 1];
+      onNavigatePage(nextMeta.target_page);
       try {
         await onSelectStep(nextStepNum, nextMeta.target_page);
       } catch (e) {
@@ -236,6 +237,7 @@ export const FloatingDemoCard: React.FC<FloatingDemoCardProps> = ({
       const prevStepNum = stepIndex;
       setActiveStep(prevStepNum);
       const prevMeta = DEMO_STEPS[prevStepNum - 1];
+      onNavigatePage(prevMeta.target_page);
       try {
         await onSelectStep(prevStepNum, prevMeta.target_page);
       } catch (e) {
