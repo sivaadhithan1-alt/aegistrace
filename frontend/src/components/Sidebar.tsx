@@ -42,6 +42,19 @@ interface SidebarProps {
   isDemoActive?: boolean;
 }
 
+type PersonaOption = Pick<UserInfo, 'user_id' | 'display_name' | 'role'>;
+
+// Keep demo personas available immediately while the backend hydrates.
+const FALLBACK_PERSONAS: PersonaOption[] = [
+  { user_id: 'arjun', display_name: 'Officer Arjun', role: 'Sender' },
+  { user_id: 'priya', display_name: 'Officer Priya', role: 'Operations' },
+  { user_id: 'rahul', display_name: 'Officer Rahul', role: 'Field Ops' },
+  { user_id: 'vikram', display_name: 'Officer Vikram', role: 'Intelligence' },
+  { user_id: 'meera', display_name: 'Officer Meera', role: 'Forensic Officer' },
+  { user_id: 'auditor', display_name: 'Security Auditor', role: 'Auditor' },
+  { user_id: 'admin', display_name: 'Security Chief', role: 'Admin' }
+];
+
 export const Sidebar: React.FC<SidebarProps> = ({
   currentPage,
   onSelectPage,
@@ -65,7 +78,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
     { id: 'demo', label: 'SIH Judge Demo', icon: <PlayCircle className="w-4 h-4" />, badge: 'EVAL' },
   ];
 
+  const personaOptions: PersonaOption[] = users.length > 0
+    ? users.map(({ user_id, display_name, role }) => ({ user_id, display_name, role }))
+    : FALLBACK_PERSONAS;
+
   const currentProfile = users.find(u => u.user_id === currentUser);
+  const fallbackProfile = FALLBACK_PERSONAS.find(u => u.user_id === currentUser);
+  const activeProfile = currentProfile || fallbackProfile;
 
   return (
     <aside className="w-64 bg-white border-r border-slate-200 flex flex-col h-screen shrink-0 select-none shadow-xs">
@@ -97,7 +116,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             onChange={(e) => onSelectUser(e.target.value)}
             className="w-full appearance-none bg-white border border-slate-200 text-slate-800 text-xs rounded-md px-2.5 py-2 pr-7 font-medium hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all shadow-2xs cursor-pointer"
           >
-            {users.map((u) => (
+            {personaOptions.map((u) => (
               <option key={u.user_id} value={u.user_id}>
                 {u.display_name} ({u.role.toUpperCase()})
               </option>
@@ -105,9 +124,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </select>
           <ChevronDown className="w-3.5 h-3.5 text-slate-400 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
         </div>
-        {currentProfile && (
+        {activeProfile && (
           <div className="mt-2 flex items-center justify-between text-[11px] px-1 text-slate-600">
-            <span className="truncate">Role: <span className="font-medium text-slate-900">{currentProfile.role}</span></span>
+            <span className="truncate">Role: <span className="font-medium text-slate-900">{activeProfile.role}</span></span>
             <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-semibold bg-indigo-50 text-indigo-700 border border-indigo-100">
               L5 CLEARANCE
             </span>
