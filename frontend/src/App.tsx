@@ -26,6 +26,7 @@ export const App: React.FC = () => {
   const [demoCompletedSteps, setDemoCompletedSteps] = useState<number[]>([]);
   const [isDemoLoading, setIsDemoLoading] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
+  // Sidebar renders local demo personas while backend data hydrates.
 
   useEffect(() => {
     loadInitialData();
@@ -34,21 +35,31 @@ export const App: React.FC = () => {
   const loadInitialData = async () => {
     try {
       setLoading(true);
-      const uList = await api.listUsers();
-      setUsers(uList);
-      if (uList.length > 0) {
-        const arjun = uList.find(u => u.user_id === 'arjun');
-        if (arjun) {
-          setCurrentUser('arjun');
-          api.setCurrentUser('arjun');
-        } else {
-          setCurrentUser(uList[0].user_id);
-          api.setCurrentUser(uList[0].user_id);
+      // These requests are independent; do not serialize them during refresh.
+      const [usersResult, demoResult] = await Promise.allSettled([
+        api.listUsers(),
+        api.getDemoState()
+      ]);
+
+      if (usersResult.status === 'fulfilled') {
+        const uList = usersResult.value;
+        setUsers(uList);
+        if (uList.length > 0) {
+          const arjun = uList.find(u => u.user_id === 'arjun');
+          if (arjun) {
+            setCurrentUser('arjun');
+            api.setCurrentUser('arjun');
+          } else {
+            setCurrentUser(uList[0].user_id);
+            api.setCurrentUser(uList[0].user_id);
+          }
         }
       }
-      const demoRes = await api.getDemoState();
-      setDemoCurrentStep(demoRes.current_step || 0);
-      setDemoCompletedSteps(demoRes.completed_steps || []);
+
+      if (demoResult.status === 'fulfilled') {
+        setDemoCurrentStep(demoResult.value.current_step || 0);
+        setDemoCompletedSteps(demoResult.value.completed_steps || []);
+      }
     } catch (err) {
       console.error('Failed to initialize AegisTrace:', err);
     } finally {
