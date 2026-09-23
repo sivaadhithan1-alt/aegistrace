@@ -49,17 +49,16 @@ export const TopBar: React.FC<TopBarProps> = ({
           <Menu className="w-5 h-5" />
         </button>
         <div className="min-w-0">
-        <h1 className="text-sm sm:text-base font-bold text-slate-900 tracking-tight flex items-center gap-2 truncate">
-          {pageInfo.title}
-        </h1>
-        <p className="hidden sm:block text-xs text-slate-500 font-normal truncate max-w-[48vw]">
-          {pageInfo.subtitle}
-        </p>
+          <h1 className="text-sm sm:text-base font-bold text-slate-900 tracking-tight truncate">
+            {pageInfo.title}
+          </h1>
+          <p className="hidden sm:block text-xs text-slate-500 font-normal truncate max-w-[48vw]">
+            {pageInfo.subtitle}
+          </p>
         </div>
       </div>
 
       <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
-        {/* Post-Quantum Suite Badge */}
         <div className="hidden lg:flex items-center space-x-2 px-3 py-1 bg-slate-100 rounded-lg border border-slate-200 text-slate-700 text-xs font-mono">
           <Cpu className="w-3.5 h-3.5 text-indigo-600" />
           <span>FIPS 203 ML-KEM-768</span>
@@ -67,16 +66,15 @@ export const TopBar: React.FC<TopBarProps> = ({
           <span>FIPS 204 ML-DSA-65</span>
         </div>
 
-        {/* SIH Judge Demo CTA */}
         <button
           onClick={onOpenDemo}
           className="flex items-center space-x-1.5 px-2 sm:px-3 py-2 sm:py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-semibold shadow-xs transition-colors cursor-pointer"
         >
           <PlayCircle className="w-3.5 h-3.5" />
-          <span className="hidden sm:inline">Launch SIH Judge Demo</span><span className="sm:hidden">Demo</span>
+          <span className="hidden sm:inline">Launch SIH Judge Demo</span>
+          <span className="sm:hidden">Demo</span>
         </button>
 
-        {/* Refresh button */}
         {onRefresh && (
           <button
             onClick={onRefresh}
@@ -87,12 +85,11 @@ export const TopBar: React.FC<TopBarProps> = ({
           </button>
         )}
 
-        {/* Current Officer Profile Badge */}
         <div className="hidden sm:flex items-center space-x-2 pl-2 border-l border-slate-200">
           <div className="w-8 h-8 rounded-full bg-indigo-100 text-indigo-700 font-bold text-xs flex items-center justify-center border border-indigo-200">
             {currentProfile ? currentProfile.display_name.slice(0, 2).toUpperCase() : 'OP'}
           </div>
-          <div className="hidden sm:block text-left">
+          <div className="text-left">
             <div className="text-xs font-bold text-slate-900 leading-tight">
               {currentProfile ? currentProfile.display_name : currentUser}
             </div>
