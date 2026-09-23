@@ -40,6 +40,8 @@ interface SidebarProps {
   users: UserInfo[];
   onSelectUser: (userId: string) => void;
   isDemoActive?: boolean;
+  isMobileOpen?: boolean;
+  onCloseMobile?: () => void;
 }
 
 type PersonaOption = Pick<UserInfo, 'user_id' | 'display_name' | 'role'>;
@@ -61,7 +63,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
   currentUser,
   users,
   onSelectUser,
-  isDemoActive = false
+  isDemoActive = false,
+  isMobileOpen = false,
+  onCloseMobile
 }) => {
   const navItems: { id: PageId; label: string; icon: React.ReactNode; badge?: string }[] = [
     { id: 'dashboard', label: 'Dashboard', icon: <LayoutDashboard className="w-4 h-4" /> },
@@ -87,7 +91,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const activeProfile = currentProfile || fallbackProfile;
 
   return (
-    <aside className="w-64 bg-white border-r border-slate-200 flex flex-col h-screen shrink-0 select-none shadow-xs">
+    <>
+      {isMobileOpen && (
+        <button
+          aria-label="Close navigation"
+          onClick={onCloseMobile}
+          className="fixed inset-0 z-40 bg-slate-900/40 md:hidden"
+        />
+      )}
+      <aside className={`fixed inset-y-0 left-0 z-50 w-[min(18rem,88vw)] bg-white border-r border-slate-200 flex flex-col h-screen shrink-0 select-none shadow-xl transition-transform duration-200 md:static md:z-auto md:w-64 md:translate-x-0 ${
+        isMobileOpen ? 'translate-x-0' : '-translate-x-full'
+      }`}>
       {/* Brand & Logo */}
       <div className="p-4 border-b border-slate-100 flex items-center justify-between">
         <div className="flex items-center space-x-2.5">
@@ -194,5 +208,4 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
       </div>
     </aside>
-  );
-};
+    </>
