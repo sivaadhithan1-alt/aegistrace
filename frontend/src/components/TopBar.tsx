@@ -41,26 +41,24 @@ export const TopBar: React.FC<TopBarProps> = ({
   return (
     <header className="min-h-16 bg-white border-b border-slate-200 px-3 sm:px-4 md:px-6 py-2 flex items-center justify-between gap-2 shrink-0 shadow-2xs z-30">
       <div className="flex items-center gap-2 min-w-0">
-      <div className="min-w-0">
+        <button
+          onClick={onOpenMobileNav}
+          aria-label="Open navigation"
+          className="md:hidden p-2 text-slate-600 hover:bg-slate-100 rounded-lg border border-slate-200 shrink-0"
+        >
+          <Menu className="w-5 h-5" />
+        </button>
+        <div className="min-w-0">
         <h1 className="text-sm sm:text-base font-bold text-slate-900 tracking-tight flex items-center gap-2 truncate">
           {pageInfo.title}
         </h1>
         <p className="hidden sm:block text-xs text-slate-500 font-normal truncate max-w-[48vw]">
           {pageInfo.subtitle}
         </p>
+        </div>
       </div>
 
       <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
-        {onOpenMobileNav && (
-          <button
-            onClick={onOpenMobileNav}
-            aria-label="Open navigation"
-            className="md:hidden p-2 text-slate-600 hover:bg-slate-100 rounded-lg border border-slate-200"
-          >
-            <Menu className="w-5 h-5" />
-          </button>
-        )}
-
         {/* Post-Quantum Suite Badge */}
         <div className="hidden lg:flex items-center space-x-2 px-3 py-1 bg-slate-100 rounded-lg border border-slate-200 text-slate-700 text-xs font-mono">
           <Cpu className="w-3.5 h-3.5 text-indigo-600" />
