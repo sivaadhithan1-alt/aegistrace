@@ -26,6 +26,7 @@ export const App: React.FC = () => {
   const [demoCompletedSteps, setDemoCompletedSteps] = useState<number[]>([]);
   const [isDemoLoading, setIsDemoLoading] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
+  const [isMobileNavOpen, setIsMobileNavOpen] = useState<boolean>(false);
   // Sidebar renders local demo personas while backend data hydrates.
 
   useEffect(() => {
@@ -152,14 +153,19 @@ export const App: React.FC = () => {
       {/* Persistent Left Sidebar */}
       <Sidebar
         currentPage={currentPage}
-        onSelectPage={setCurrentPage}
+        onSelectPage={(page) => {
+          setCurrentPage(page);
+          setIsMobileNavOpen(false);
+        }}
         currentUser={currentUser}
         users={users}
         onSelectUser={handleSelectUser}
+        isMobileOpen={isMobileNavOpen}
+        onCloseMobile={() => setIsMobileNavOpen(false)}
       />
 
       {/* Main App Canvas */}
-      <div className="flex-1 flex flex-col h-screen overflow-hidden">
+      <div className="min-w-0 flex-1 flex flex-col h-screen overflow-hidden">
         {/* Top Header */}
         <TopBar
           currentPage={currentPage}
@@ -167,10 +173,11 @@ export const App: React.FC = () => {
           users={users}
           onOpenDemo={() => handleLaunchJudgeDemo(1)}
           onRefresh={loadInitialData}
+          onOpenMobileNav={() => setIsMobileNavOpen(true)}
         />
 
         {/* Scrollable View Area */}
-        <main className="flex-1 overflow-y-auto bg-slate-50">
+        <main className="min-w-0 flex-1 overflow-y-auto overflow-x-hidden bg-slate-50">
           {currentPage === 'dashboard' && (
             <DashboardView
               currentUser={currentUser}
