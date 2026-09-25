@@ -82,33 +82,8 @@ class MessagingService:
 
     @staticmethod
     def list_user_conversations(user_id: str) -> List[Dict[str, Any]]:
-        # Keep the built-in demo task force available for every officer so
-        # opening Chats & Comms never depends on a separate UI action.
         conn = get_db_connection()
         try:
-            demo_exists = conn.execute(
-                """
-                SELECT 1
-                FROM conversations c
-                JOIN conversation_members m ON c.conversation_id = m.conversation_id
-                WHERE c.title = ?
-                  AND c.is_group = 1
-                  AND m.user_id = ?
-                LIMIT 1
-                """,
-                ("Joint Intelligence Task Force Alpha", user_id)
-            ).fetchone()
-
-            if not demo_exists:
-                conn.close()
-                MessagingService.get_or_create_conversation(
-                    creator_id=user_id,
-                    participant_ids=["priya", "rahul", "vikram"],
-                    title="Joint Intelligence Task Force Alpha",
-                    is_group=True,
-                )
-                conn = get_db_connection()
-
             rows = conn.execute(
                 """
                 SELECT c.conversation_id, c.title, c.is_group, c.created_by, c.created_at, c.updated_at
