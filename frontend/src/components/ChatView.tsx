@@ -14,7 +14,8 @@ import {
   Sparkles,
   ShieldCheck,
   ChevronRight,
-  Download
+  Download,
+  ArrowLeft
 } from 'lucide-react';
 import { Conversation, Message, UserInfo } from '../types';
 import { api } from '../api/client';
@@ -175,7 +176,7 @@ export const ChatView: React.FC<ChatViewProps> = ({ currentUser, users }) => {
   );
 
   return (
-    <div className="flex h-[calc(100vh-4rem)] bg-white overflow-hidden">
+    <div className="flex h-[calc(100dvh-4rem)] w-full max-w-full min-w-0 bg-white overflow-hidden">
       {/* Hidden file input */}
       <input
         type="file"
@@ -185,7 +186,7 @@ export const ChatView: React.FC<ChatViewProps> = ({ currentUser, users }) => {
       />
 
       {/* Left Sidebar: Conversations List */}
-      <div className="w-80 sm:w-96 border-r border-slate-200 flex flex-col bg-white shrink-0">
+      <div className={`${activeConv ? "hidden md:flex" : "flex"} w-full md:w-80 lg:w-96 border-r border-slate-200 flex-col bg-white shrink-0 min-w-0`}>
         {/* Sidebar Header */}
         <div className="p-4 border-b border-slate-200 flex items-center justify-between">
           <div>
@@ -284,10 +285,13 @@ export const ChatView: React.FC<ChatViewProps> = ({ currentUser, users }) => {
 
       {/* Main Chat Area */}
       {activeConv ? (
-        <div className="flex-1 flex flex-col bg-slate-50">
+        <div className="flex-1 min-w-0 max-w-full flex flex-col bg-slate-50">
           {/* Chat Header */}
-          <div className="p-3.5 border-b border-slate-200 bg-white flex items-center justify-between shadow-2xs">
-            <div className="flex items-center space-x-3 min-w-0">
+          <div className="p-3.5 border-b border-slate-200 bg-white flex items-center justify-between shadow-2xs min-w-0">
+            <div className="flex items-center min-w-0 gap-2">
+              <button type="button" onClick={() => { setActiveConvId(null); setMessages([]); }} className="md:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100 shrink-0" aria-label="Back to conversations">
+                <ArrowLeft className="w-4 h-4" />
+              </button>
               <div className="w-9 h-9 rounded-lg bg-indigo-600 text-white flex items-center justify-center font-bold shrink-0 shadow-2xs">
                 {activeConv.is_group ? <Users className="w-4 h-4" /> : activeConv.title.charAt(0).toUpperCase()}
               </div>
@@ -313,7 +317,7 @@ export const ChatView: React.FC<ChatViewProps> = ({ currentUser, users }) => {
           </div>
 
           {/* Messages Stream */}
-          <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4">
+          <div className="flex-1 min-w-0 w-full max-w-full overflow-y-auto overflow-x-hidden p-4 sm:p-6 space-y-4">
             {messages.length === 0 ? (
               <div className="h-full flex flex-col items-center justify-center text-center p-6 text-slate-400 text-xs">
                 <Shield className="w-10 h-10 text-slate-300 mb-2" />
