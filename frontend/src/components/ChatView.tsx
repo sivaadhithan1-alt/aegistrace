@@ -67,26 +67,10 @@ export const ChatView: React.FC<ChatViewProps> = ({ currentUser, users }) => {
   const loadConversations = async () => {
     try {
       const convs = await api.getConversations();
-      let availableConvs = convs;
-
-      // Open the demo task-force group immediately when Chats & Comms is selected.
-      // This removes the extra "Use Demo Task Force Contacts" step.
-      let taskForce = availableConvs.find(
-        c => c.title === 'Joint Intelligence Task Force Alpha' && c.is_group
-      );
-
-      if (!taskForce) {
-        const demoRecips = ['priya', 'rahul', 'vikram'];
-        taskForce = await api.createConversation(
-          demoRecips,
-          'Joint Intelligence Task Force Alpha',
-          true
-        );
-        availableConvs = [...availableConvs, taskForce];
+      setConversations(convs);
+      if (convs.length > 0 && !activeConvId) {
+        setActiveConvId(convs[0].conversation_id);
       }
-
-      setConversations(availableConvs);
-      setActiveConvId(taskForce.conversation_id);
     } catch (err) {
       console.error(err);
     }
