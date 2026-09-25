@@ -33,6 +33,9 @@ export const ChatView: React.FC<ChatViewProps> = ({ currentUser, users }) => {
   const [inputText, setInputText] = useState<string>('');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
+  // The demo task force is intentionally hidden until the user explicitly activates it.
+  // This is session-local UI state; the backend conversation may already exist.
+  const [demoTaskForceActivated, setDemoTaskForceActivated] = useState<boolean>(false);
 
   // Modals state
   const [isAttachModalOpen, setIsAttachModalOpen] = useState<boolean>(false);
@@ -49,6 +52,9 @@ export const ChatView: React.FC<ChatViewProps> = ({ currentUser, users }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    setDemoTaskForceActivated(false);
+    setActiveConvId(null);
+    setMessages([]);
     loadConversations();
   }, [currentUser]);
 
@@ -143,10 +149,13 @@ export const ChatView: React.FC<ChatViewProps> = ({ currentUser, users }) => {
     }
   };
 
+  const DEMO_TASK_FORCE_TITLE = 'Joint Intelligence Task Force Alpha';
+
   const handleCreateDemoTaskForce = async () => {
     try {
       const demoRecips = ['priya', 'rahul', 'vikram'];
-      const conv = await api.createConversation(demoRecips, 'Joint Intelligence Task Force Alpha', true);
+      const conv = await api.createConversation(demoRecips, DEMO_TASK_FORCE_TITLE, true);
+      setDemoTaskForceActivated(true);
       await loadConversations();
       setActiveConvId(conv.conversation_id);
     } catch (err) {
@@ -154,9 +163,13 @@ export const ChatView: React.FC<ChatViewProps> = ({ currentUser, users }) => {
     }
   };
 
-  const activeConv = conversations.find(c => c.conversation_id === activeConvId);
+  const visibleConversations = demoTaskForceActivated
+    ? conversations
+    : conversations.filter(c => c.title !== DEMO_TASK_FORCE_TITLE);
 
-  const filteredConversations = conversations.filter(c =>
+  const activeConv = visibleConversations.find(c => c.conversation_id === activeConvId);
+
+  const filteredConversations = visibleConversations.filter(c =>
     c.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     c.members.some(m => m.toLowerCase().includes(searchQuery.toLowerCase()))
   );
