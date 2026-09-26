@@ -192,13 +192,6 @@ export const ChatView: React.FC<ChatViewProps> = ({ currentUser, users }) => {
     c.members.some(m => m.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
-  const activeConv = visibleConversations.find(c => c.conversation_id === activeConvId);
-
-  const filteredConversations = visibleConversations.filter(c =>
-    c.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    c.members.some(m => m.toLowerCase().includes(searchQuery.toLowerCase()))
-  );
-
   return (
     <div className="flex h-[calc(100dvh-4rem)] w-full max-w-full min-w-0 bg-white overflow-hidden">
       {/* Hidden file input */}
