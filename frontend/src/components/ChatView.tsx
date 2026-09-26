@@ -154,8 +154,18 @@ export const ChatView: React.FC<ChatViewProps> = ({ currentUser, users }) => {
 
   const handleCreateDemoTaskForce = async () => {
     try {
-      const demoRecips = ['priya', 'rahul', 'vikram'];
-      const conv = await api.createConversation(demoRecips, DEMO_TASK_FORCE_TITLE, true);
+      // Reuse the existing demo task force instead of creating a duplicate
+      // every time the user returns to Chats & Comms.
+      const existingDemo = conversations.find(
+        c => c.title === DEMO_TASK_FORCE_TITLE && c.is_group
+      );
+
+      let conv = existingDemo;
+      if (!conv) {
+        const demoRecips = ['priya', 'rahul', 'vikram'];
+        conv = await api.createConversation(demoRecips, DEMO_TASK_FORCE_TITLE, true);
+      }
+
       setDemoTaskForceActivated(true);
       await loadConversations();
       setActiveConvId(conv.conversation_id);
@@ -167,6 +177,20 @@ export const ChatView: React.FC<ChatViewProps> = ({ currentUser, users }) => {
   const visibleConversations = demoTaskForceActivated
     ? conversations
     : conversations.filter(c => c.title !== DEMO_TASK_FORCE_TITLE);
+
+  // Keep only one visible demo task force entry even if older duplicate
+  // records already exist in the backend.
+  const deduplicatedConversations = visibleConversations.filter((conv, index, list) =>
+    conv.title !== DEMO_TASK_FORCE_TITLE ||
+    index === list.findIndex(c => c.title === DEMO_TASK_FORCE_TITLE)
+  );
+
+  const activeConv = deduplicatedConversations.find(c => c.conversation_id === activeConvId);
+
+  const filteredConversations = deduplicatedConversations.filter(c =>
+    c.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    c.members.some(m => m.toLowerCase().includes(searchQuery.toLowerCase()))
+  );
 
   const activeConv = visibleConversations.find(c => c.conversation_id === activeConvId);
 
